@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拖拽</title>
+	
+    <style>
+        #box{width: 100px;height: 100px;position: absolute;background: #27AEFE;}
+        #box1{width: 100px;height: 100px;position: absolute;background: red;}
+        #box3{width: 100px;height: 100px;position: absolute;background: green;}
+        #box2{width: 100px;height: 100px;position: absolute;background: yellow;}
+    </style>
+</head>
+<body>
+    <div id="box1"></div>
+    <div id="box"></div>
+    <div id="box2"></div>
+    <div id="box3"></div>
+
+<script>
+
+//改写面向对象
+//1.所有的东西都在window.onload里面,
+//2.将函数/变量全部提取出来
+//3.将window.onlaod改写成构造函数
+//4.将原先的变量和函数改写成该构造函数的属性和方法;
+//5.添加this,
+//6.改错,this的指向问题/
+//   在定时器和事件处理函数里面this会出错
+//   解决方法:在外面将this存入变量,将需要更改的地方用函数包裹
+window.onload = function(){
+    var div1 = new Drag( 'box' );
+    var div2 = new Drag( 'box1' );
+    var div3 = new Drag( 'box3' );
+    var div4 = new Drag( 'box2' );
+}
+ 
+    function Drag( id ){
+        var _this = this;
+        this.disX = null;
+        this.disY = null;
+        this.box = document.getElementById(id);
+        this.box.onmousedown = function(){
+            _this.fnDown();
+        }
+    };
+    Drag.prototype.fnDown = function ( ev ){
+        var _this = this;
+        var e = ev || event;
+        this.disX = e.clientX - this.box.offsetLeft;
+        this.disY = e.clientY - this.box.offsetTop;
+        document.onmousemove = function(){
+          _this.fnMove();  
+        } 
+        document.onmouseup = function(){
+          _this.fnUp();
+        }     };
+    Drag.prototype.fnMove = function ( ev ){
+        var e = ev || event;
+        this.box.style.left = e.clientX - this.disX + 'px';
+        this.box.style.top = e.clientY - this.disY + 'px';
+    };
+    Drag.prototype.fnUp = function (){
+        document.onmousemove = null;
+        document.onmouseup = null;
+    };
+   
+
+    
+</script>
+
+</body>
+</html>
